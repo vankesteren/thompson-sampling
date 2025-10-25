@@ -1,7 +1,6 @@
 # Bayesian Beta-Bernoulli multi-armed bandit
 ![Python](https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=fff)
-![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json) 
-![scipy](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/vankesteren/thompson-sampling/main/scipy_button.json)
+![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)
 
 This is a short & simple exploration of a Bayesian bandit with multiple arms with a Bernoulli reward.
 
