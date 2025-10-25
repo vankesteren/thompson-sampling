@@ -4,16 +4,13 @@ from scipy.stats.distributions import bernoulli
 from arm import Arm
 from bandit import BinomialBandit
 
-# set seeds
-np.random.seed(123)
-
 def main():
     
-    print("initializing 100 arms")
+    print("Initializing 100 arms")
     n_arms = 100
     p_true = np.random.uniform(size=n_arms)
     
-    print(f"true prob: {p_true.round(3)}\n")
+    print(f"True probabilities:\n{p_true.round(3)}\n")
     arms = [Arm(id=i, dist=bernoulli(p=prob)) for i, prob in enumerate(p_true)]
 
     print("Initializing Binomial Bandit\n")
