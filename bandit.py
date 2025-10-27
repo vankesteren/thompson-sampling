@@ -1,7 +1,6 @@
 from functools import cached_property
 
 import numpy as np
-from scipy.stats.distributions import beta
 from tqdm import tqdm
 
 from arm import Arm
@@ -47,6 +46,8 @@ class BinomialBandit:
         self.n_arms = len(arms)
         self.B = np.ones((self.n_arms, 2), dtype=np.float64)
         self.eta = eta
+        self.n_success = 0
+        self.n_failure = 0
 
     def sample_arm(self, verbose: bool = False):
         """
@@ -66,12 +67,12 @@ class BinomialBandit:
             The index of the selected arm.
         """
         # TODO: speed this up using https://stats.stackexchange.com/questions/548202/distribution-of-argmax-of-beta-distributed-random-variables
-        p_hats = np.array([beta.rvs(a=par[0], b=par[1]) for par in self.B])
+        p_hats = np.array([np.random.beta(a=par[0], b=par[1]) for par in self.B])
         if verbose:
             print(p_hats.round(3))
         return np.argmax(p_hats)
 
-    def update(self, n: int = 1) -> None:
+    def update(self, n: int = 1, progress: bool = False) -> None:
         """
         Perform Bayesian updates to each arm’s Beta parameters
         based on observed rewards from simulated arm pulls.
@@ -86,10 +87,20 @@ class BinomialBandit:
         n : int, optional
             Number of update iterations to perform. Default is 1.
         """
-        for _ in tqdm(range(n)):
-            arm_id = self.sample_arm()
-            reward = int(self.arms[arm_id].pull())
-            self.B[arm_id, 1 - reward] += 1.0 + self.eta
+        if progress:
+            for _ in tqdm(range(n)):
+                arm_id = self.sample_arm()
+                reward = int(self.arms[arm_id].pull())
+                self.n_success += reward
+                self.n_failure += 1 - reward
+                self.B[arm_id, 1 - reward] += 1.0 + self.eta
+        else:
+            for _ in range(n):
+                arm_id = self.sample_arm()
+                reward = int(self.arms[arm_id].pull())
+                self.n_success += reward
+                self.n_failure += 1 - reward
+                self.B[arm_id, 1 - reward] += 1.0 + self.eta
 
     @property
     def p_hat(self):
@@ -130,7 +141,7 @@ class BinomialBandit:
         np.ndarray
             Array of true success probabilities, one per arm.
         """
-        return np.array([a.dist.kwds.get("p", 0.5) for a in self.arms])
+        return np.array([a.prob for a in self.arms])
 
     @property
     def p_err(self) -> np.ndarray:
@@ -147,22 +158,21 @@ class BinomialBandit:
         return self.p_true - self.p_hat
 
     @property
-    def reward(self) -> float:
+    def n_total(self) -> int:
+        return self.n_success + self.n_failure
+    
+    @property
+    def regret(self) -> float:
         """
-        Total number of observed successes across all arms.
-
-        Notes
-        -----
-        This value is computed from the Beta-parameter matrix ``B`` by summing
-        ``alpha - 1`` for all arms, which equals the count of observed successes
-        since initialization.
+        Returns the regret (expected value of always pulling the 
+        best arm minus the obtained reward).
 
         Returns
         -------
         float
-            Cumulative successes over all pulls.
+            Regret value
         """
-        return (self.B[:, 0] - 1).sum()
+        return max(self.p_true) * self.n_total - self.n_success
 
     def summary(self) -> None:
         """
@@ -173,8 +183,10 @@ class BinomialBandit:
         - Mean squared estimation error across arms.
         - Indices and probabilities of the true-best and currently estimated-best arms.
         """
-        print(f"[ Bayesian binomial bandit with {self.n_arms} arms ]")
-        print(f"- Pulled {int(self.pull_count.sum())} times, with {int(self.reward)} successes.")
+        print(f"\n[ Bayesian binomial bandit with {self.n_arms} arms ]")
+        print(f"- Pulled {self.n_total} times: {self.n_success} successes & {self.n_failure} failures")
+        if self.n_total > 0:
+            print(f"- Regret: {self.regret:.3f} (proportion: {self.regret / self.n_total:.3f})")
         print(f"- Mean squared estimation error: {float((self.p_err * self.p_err).mean()):.3f}")
         i_true = np.argmax(self.p_true)
         i_hat = np.argmax(self.p_hat)

@@ -27,48 +27,54 @@ which will run the sample program to produce the following (or similar) output:
 ```
 Initializing 100 arms
 True probabilities:
-[0.717 0.598 0.713 0.252 0.52  0.628 0.68  0.471 0.478 0.777 0.387 0.551
- 0.001 0.268 0.498 0.743 0.682 0.35  0.085 0.522 0.836 0.629 0.039 0.715
- 0.51  0.222 0.47  0.451 0.059 0.665 0.7   0.207 0.344 0.992 0.311 0.08
- 0.781 0.272 0.864 0.114 0.312 0.064 0.806 0.019 0.372 0.654 0.98  0.674
- 0.761 0.233 0.875 0.539 0.744 0.662 0.315 0.904 0.542 0.293 0.539 0.243
- 0.898 0.622 0.834 0.089 0.67  0.6   0.058 0.268 0.831 0.481 0.701 0.398
- 0.527 0.776 0.989 0.713 0.385 0.355 0.118 0.153 0.448 0.629 0.827 0.051
- 0.333 0.139 0.851 0.867 0.724 0.907 0.044 0.633 0.982 0.605 0.148 0.751
- 0.795 0.609 0.046 0.834]
+[0.3   0.244 0.435 0.703 0.261 0.354 0.275 0.492 0.858 0.305 0.395 0.638
+ 0.512 0.344 0.981 0.978 0.065 0.807 0.964 0.424 0.07  0.152 0.473 0.515
+ 0.278 0.345 0.693 0.543 0.427 0.552 0.983 0.849 0.691 0.794 0.619 0.175
+ 0.918 0.413 0.436 0.704 0.942 0.745 0.409 0.369 0.637 0.808 0.029 0.364
+ 0.525 0.942 0.785 0.335 0.792 0.074 0.752 0.16  0.694 0.74  0.676 0.287
+ 0.048 0.12  0.857 0.406 0.547 0.682 0.607 0.858 0.332 0.61  0.326 0.559
+ 0.358 0.266 0.304 0.21  0.648 0.259 0.225 0.961 0.762 0.422 0.708 0.298
+ 0.776 0.053 0.425 0.783 0.538 0.849 0.202 0.749 0.983 0.994 0.584 0.955
+ 0.767 0.259 0.176 0.558]
 
 Initializing Binomial Bandit
 
 [ Bayesian binomial bandit with 100 arms ]
-- Pulled 0 times, with 0 successes.
-- Mean squared estimation error: 0.077
-- true best arm: 33, p_true 0.992, p_hat 0.500
-- estd best arm: 0, p_true 0.717, p_hat 0.500
+- Pulled 0 times: 0 successes & 0 failures
+- Mean squared estimation error: 0.073
+- true best arm: 93, p_true 0.994, p_hat 0.500
+- estd best arm: 0, p_true 0.300, p_hat 0.500
 
 Updating 250 times...
 
-100%|█████████████████████████████████| 250/250 [00:00<00:00, 268.23it/s]
+100%|█████████████████████████████████████| 250/250 [00:00<00:00, 6099.71it/s]
+
 [ Bayesian binomial bandit with 100 arms ]
-- Pulled 250 times, with 172 successes.
-- Mean squared estimation error: 0.049
-- true best arm: 33, p_true 0.992, p_hat 0.929
-- estd best arm: 92, p_true 0.982, p_hat 0.957
+- Pulled 250 times: 180 successes & 70 failures
+- Regret: 68.528 (proportion: 0.274)
+- Mean squared estimation error: 0.046
+- true best arm: 93, p_true 0.994, p_hat 0.955
+- estd best arm: 93, p_true 0.994, p_hat 0.955
 
 Updating another 250 times...
 
-100%|█████████████████████████████████| 250/250 [00:00<00:00, 290.24it/s]
+100%|█████████████████████████████████████| 250/250 [00:00<00:00, 5807.32it/s]
+
 [ Bayesian binomial bandit with 100 arms ]
-- Pulled 500 times, with 386 successes.
-- Mean squared estimation error: 0.049
-- true best arm: 33, p_true 0.992, p_hat 0.951
-- estd best arm: 74, p_true 0.989, p_hat 0.970
+- Pulled 500 times: 409 successes & 91 failures
+- Regret: 88.055 (proportion: 0.176)
+- Mean squared estimation error: 0.039
+- true best arm: 93, p_true 0.994, p_hat 0.989
+- estd best arm: 93, p_true 0.994, p_hat 0.989
 
 Let's see if the success probability increases now...
 
-100%|███████████████████████████████| 2500/2500 [00:08<00:00, 298.33it/s]
+100%|███████████████████████████████████| 2500/2500 [00:00<00:00, 5821.15it/s]
+
 [ Bayesian binomial bandit with 100 arms ]
-- Pulled 3000 times, with 2820 successes.
-- Mean squared estimation error: 0.043
-- true best arm: 33, p_true 0.992, p_hat 0.990
-- estd best arm: 33, p_true 0.992, p_hat 0.990
+- Pulled 3000 times: 2870 successes & 130 failures
+- Regret: 112.331 (proportion: 0.037)
+- Mean squared estimation error: 0.037
+- true best arm: 93, p_true 0.994, p_hat 0.995
+- estd best arm: 93, p_true 0.994, p_hat 0.995
 ```

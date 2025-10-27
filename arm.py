@@ -1,22 +1,20 @@
-from scipy.stats._distn_infrastructure import rv_frozen
 import numpy as np
 
 class Arm:
     """
-    A single arm in a multi-armed bandit problem.
+    A single binomial arm in a multi-armed bandit problem.
 
     Each Arm instance represents a stochastic process that can be "pulled"
-    to produce a reward drawn from a specified probability distribution.
+    to produce a reward drawn from a binomial trial.
 
     Attributes
     ----------
     id : int
         A unique identifier for the arm.
-    dist : rv_frozen
-        A frozen SciPy random variable representing the reward distribution
-        of the arm (e.g., `scipy.stats.bernoulli(p)` or `scipy.stats.norm(mu, sigma)`).
+    prob : float
+        The probability of success (reward 1)
     """
-    def __init__(self, id: int, dist: rv_frozen) -> None:
+    def __init__(self, id: int, prob: float) -> None:
         """
         Initialize an Arm with a given ID and reward distribution.
 
@@ -24,37 +22,28 @@ class Arm:
         ----------
         id : int
             Unique identifier for this arm.
-        dist : rv_frozen
-            A frozen random variable (from `scipy.stats`) that defines the
-            probability distribution of the arm’s rewards.
+        prob : float
+            Number between 0 and 1 indicating the probability of success
         """
         self.id = id
-        self.dist = dist
+        self.prob = prob
 
-    def pull(self, n: int | None = None) -> int | float | np.ndarray:
+    def pull(self, n: int = 1) -> float:
         """
         Simulate pulling the arm to generate one or more rewards.
 
         Parameters
         ----------
-        n : int or None, optional
-            Number of samples (pulls) to draw. If None, a single reward is drawn.
+        n : int, default 1
+            Number of samples (pulls) to draw.
 
         Returns
         -------
-        int | float | np.ndarray
-            A single reward value or an array of rewards, depending on `n`.
-
-        Notes
-        -----
-        - The type of return value depends on the underlying distribution and the number of samples.
-        - For binary bandits, this typically returns 0 or 1.
+        float
+            A single reward value.
         """
-        return self.dist.rvs(n)
+        return np.random.binomial(n, self.prob)
 
     def __repr__(self) -> str:
-        out = f"<Arm {self.id}> "
-        out += self.dist.dist.name
-        out += str(self.dist.kwds)
-        return out
+        return f"Arm {self.id}, p: {self.prob}"
 
